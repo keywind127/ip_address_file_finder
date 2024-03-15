@@ -30,7 +30,7 @@ def find_host_port(filename : str) -> Iterator[ Tuple[ str, int, str ] ]:
     file_lines : List[ str ] = open(filename, "r", -1, "utf-8").read().split("\n")
 
     for line_idx, file_line in enumerate(file_lines, start = 1):
-        for host_port in re.findall("[\d]+.[\d]+.[\d]+.[\d]+:[\d]+|[\d]+.[\d]+.[\d]+.[\d]+", file_line):
+        for host_port in re.findall("[\d]+\.[\d]+\.[\d]+\.[\d]+\:[\d]+|[\d]+\.[\d]+\.[\d]+\.[\d]+", file_line):
             yield (filename, line_idx, host_port)
 
 def main(directory : str, extension : str) -> None:
