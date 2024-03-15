@@ -1,6 +1,6 @@
 import argparse
 
-from main import main
+from ip_address_file_finder.main import main
 
 parser = argparse.ArgumentParser(description = "This module is used to find all IP address and port numbers of files.")
 
