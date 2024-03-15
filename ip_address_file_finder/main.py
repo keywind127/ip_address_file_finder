@@ -33,14 +33,18 @@ def find_host_port(filename : str) -> Iterator[ Tuple[ str, int, str ] ]:
         for host_port in re.findall("[\d]+.[\d]+.[\d]+.[\d]+:[\d]+|[\d]+.[\d]+.[\d]+.[\d]+", file_line):
             yield (filename, line_idx, host_port)
 
-def main(directory : str) -> None:
+def main(directory : str, extension : str) -> None:
 
     print(f"\n[ SEARCHING ] [ {bcolors.OKGREEN}{directory}{bcolors.ENDC} ]\n")
 
-    for filename in find_files(directory):
-        for (_filename, _line_idx, _host_port) in find_host_port(filename):
-            print(f"""[ FOUND ] [ {bcolors.OKBLUE}{_line_idx}{bcolors.ENDC} ] [ {bcolors.WARNING}{_host_port}{bcolors.ENDC} ] [ {bcolors.OKGREEN}{_filename}{bcolors.ENDC} ]""")
-
+    for filename in filter(lambda x : ((True) if (extension == "") else (os.path.splitext(x)[1].replace(".", "").lower() == extension.lower())), find_files(directory)):
+        try:
+            for (_filename, _line_idx, _host_port) in find_host_port(filename):
+                print(f"""[ FOUND ] [ {bcolors.OKBLUE}{_line_idx}{bcolors.ENDC} ] [ {bcolors.WARNING}{_host_port}{bcolors.ENDC} ] [ {bcolors.OKGREEN}{_filename}{bcolors.ENDC} ]""")
+        except KeyboardInterrupt:
+            raise
+        except Exception:
+            pass
     print("")
 
 if (__name__ == "__main__"):
@@ -49,6 +53,8 @@ if (__name__ == "__main__"):
 
     parser.add_argument("-d", "--directory", help = "Directory to check for IP and PORT.", default = "./")
 
+    parser.add_argument("-e", "--extension", help = "File extension type. For example, `py`.", default = "")
+
     args = parser.parse_args()
 
-    main(args.directory)
+    main(args.directory, args.extension)

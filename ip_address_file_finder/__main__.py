@@ -6,6 +6,8 @@ parser = argparse.ArgumentParser(description = "This module is used to find all 
 
 parser.add_argument("-d", "--directory", help = "Directory to check for IP and PORT.", default = "./")
 
+parser.add_argument("-e", "--extension", help = "File extension type. For example, `py`.", default = "")
+
 args = parser.parse_args()
 
-main(args.directory)
+main(args.directory, args.extension)
