@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name = "ip-address-file-finder",
-    version = '0.0.5',
+    version = '0.0.6',
     description = 'This module is used to find files containing IP addresses and PORTs.',
     author = 'keywind127',
     author_email = 'watersprayer127@gmail.com',

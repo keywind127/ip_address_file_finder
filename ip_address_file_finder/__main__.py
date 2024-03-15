@@ -8,6 +8,8 @@ parser.add_argument("-d", "--directory", help = "Directory to check for IP and P
 
 parser.add_argument("-e", "--extension", help = "File extension type. For example, `py`.", default = "")
 
+parser.add_argument("-f", "--filter", help = "Filter by IP address prefixes. For example, `140.116`.", default = "")
+
 args = parser.parse_args()
 
-main(args.directory, args.extension)
+main(args.directory, args.extension, args.filter)

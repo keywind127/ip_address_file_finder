@@ -33,13 +33,21 @@ def find_host_port(filename : str) -> Iterator[ Tuple[ str, int, str ] ]:
         for host_port in re.findall("[\d]+\.[\d]+\.[\d]+\.[\d]+\:[\d]+|[\d]+\.[\d]+\.[\d]+\.[\d]+", file_line):
             yield (filename, line_idx, host_port)
 
-def main(directory : str, extension : str) -> None:
+def main(directory : str, extension : str, _filter : str) -> None:
 
     print(f"\n[ SEARCHING ] [ {bcolors.OKGREEN}{directory}{bcolors.ENDC} ]\n")
+
+    def does_not_match(src_host : str, prefix : str) -> bool:
+        if (prefix == ""):
+            return False
+        min_len = min(len(src_host), len(prefix))
+        return src_host[:min_len] != prefix[:min_len]
 
     for filename in filter(lambda x : ((True) if (extension == "") else (os.path.splitext(x)[1].replace(".", "").lower() == extension.lower())), find_files(directory)):
         try:
             for (_filename, _line_idx, _host_port) in find_host_port(filename):
+                if (does_not_match(_host_port, _filter)):
+                    continue
                 print(f"""[ FOUND ] [ {bcolors.OKBLUE}{_line_idx}{bcolors.ENDC} ] [ {bcolors.WARNING}{_host_port}{bcolors.ENDC} ] [ {bcolors.OKGREEN}{_filename}{bcolors.ENDC} ]""")
         except KeyboardInterrupt:
             raise
@@ -55,6 +63,8 @@ if (__name__ == "__main__"):
 
     parser.add_argument("-e", "--extension", help = "File extension type. For example, `py`.", default = "")
 
+    parser.add_argument("-f", "--filter", help = "Filter by IP address prefixes. For example, `140.116`.", default = "")
+
     args = parser.parse_args()
 
-    main(args.directory, args.extension)
+    main(args.directory, args.extension, args.filter)
